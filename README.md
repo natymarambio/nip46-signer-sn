@@ -41,7 +41,7 @@ python -m nip46_signer info          # muestra la npub (no pide contraseña)
 python -m nip46_signer bunker
 #   Usuario: npub1…
 #   Pega este token en Stacker News …:
-#     bunker://<pubkey>?relay=wss%3A%2F%2Frelay.nsec.app&relay=wss%3A%2F%2Fnos.lol&secret=…
+#     bunker://<pubkey>?relay=wss%3A%2F%2Frelay.primal.net&secret=…
 ```
 
 3. Abre <https://stacker.news/signup?callbackUrl=https%3A%2F%2Fstacker.news%2F&type=nostr>
@@ -69,6 +69,19 @@ pip install pytest && python -m pytest -q      # 94 tests
   **misma verificación que hace el servidor de SN** (`nostrEventAuth`: id SHA-256, firma Schnorr y tag `challenge`).
   También cubre el secreto de un solo uso, el rechazo por parte del usuario, peticiones sin `connect` y `nostrconnect://`.
 
+## Prueba real en Stacker News (9-nov-2026)
+
+El flujo se probó de principio a fin contra stacker.news: `connect` → `"ack"` → `get_public_key` → `sign_event`
+(kind 27235) → sesión iniciada y creación de la cuenta. Los mensajes viajaron cifrados con NIP-04, como se anticipó
+al leer el código de NDK 2.12.
+
+**Hallazgo de la prueba:** con los relays elegidos al principio (`relay.nsec.app` y `nos.lol`), SN quedaba en
+*"Waiting for authorization"*. Al inspeccionar el tráfico websocket del navegador se vio que SN sí publicaba el
+`connect`, pero esos relays descartaban el evento kind 24133 sin responder (ni siquiera con `OK`). Probé publicar un
+evento de prueba en varios relays: solo `relay.primal.net` lo aceptó y lo reenvió al suscriptor. Por eso es el relay
+por defecto. Los tests automáticos no detectaban este problema porque usan un relay local: es un riesgo operacional,
+no del protocolo.
+
 ## Cómo acoté el problema
 
 Antes de escribir código revisé el código fuente de Stacker News (`components/nostr-auth.js`, `lib/nostr.js`,
@@ -86,7 +99,7 @@ Antes de escribir código revisé el código fuente de Stacker News (`components
 - **Un usuario, una clave, una máquina.** Es un firmante personal de demostración, no un servicio multiusuario.
 - **CLI en vez de interfaz web.** La prueba pide "una forma" de ingresar la clave; una CLI cumple, es más simple de
   auditar y evita servir una página que maneje secretos. Las aprobaciones se hacen en la terminal.
-- **Relays por defecto:** `wss://relay.nsec.app` (dedicado a NIP-46) y `wss://nos.lol`. Se pueden cambiar con `--relay`.
+- **Relay por defecto:** `wss://relay.primal.net`. Se puede cambiar con `--relay` (repetible). Ver "Prueba real" más abajo.
 - **La clave del firmante es la misma clave del usuario** (`remote-signer-pubkey == user-pubkey`), algo que la spec permite.
 - **Sesiones en memoria:** al cerrar el firmante, las apps conectadas deben volver a conectarse.
 

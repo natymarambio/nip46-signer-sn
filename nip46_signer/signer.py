@@ -25,7 +25,9 @@ from .relays import RelayPool
 log = logging.getLogger(__name__)
 
 KIND_NIP46 = 24133
-DEFAULT_RELAYS = ["wss://relay.nsec.app", "wss://nos.lol"]
+# Verified in the real login test (2026-11-09): relay.primal.net accepts and relays kind 24133;
+# relay.nsec.app and nos.lol silently dropped the events from Stacker News.
+DEFAULT_RELAYS = ["wss://relay.primal.net"]
 
 # approve(kind_of_request, client_pubkey, human_readable_details) -> bool
 Approver = Callable[[str, str, str], Awaitable[bool]]

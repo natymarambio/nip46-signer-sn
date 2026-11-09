@@ -1,0 +1,22 @@
+[project]
+name = "nip46-signer"
+version = "0.1.0"
+description = "Firmante remoto Nostr (NIP-46) mínimo para iniciar sesión en Stacker News"
+requires-python = ">=3.10"
+dependencies = ["coincurve>=20", "cryptography>=42", "pynacl>=1.5", "websockets>=14"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+nip46-signer = "nip46_signer.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["nip46_signer"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -2,10 +2,8 @@
 
 Agente utilizado: **Claude (Anthropic)**, en modo agente con acceso a terminal.
 
-Contenido de esta carpeta:
-
-- `conversacion.md` (o `.pdf`): transcripción completa de la sesión de desarrollo.
-- Enlace público a la conversación: _<pegar aquí el enlace "Compartir">_
+**Conversación completa (enlace público):**
+https://claude.ai/share/e836bcaf-2a54-445a-b5f1-47b8bd4d966b
 
 ## Resumen de la sesión
 
@@ -20,5 +18,7 @@ Contenido de esta carpeta:
 4. Implementación por capas: criptografía → almacén de clave → relays → firmante → CLI.
 5. Verificación: vectores oficiales NIP-44/NIP-49/NIP-19, tests de punta a punta con relay local y un cliente que
    replica a Stacker News, y prueba manual de la CLI.
-6. Prueba final real en stacker.news hecha por mí en mi computador (el entorno del agente no tenía acceso a internet
-   abierto, solo a registros de paquetes y GitHub).
+6. La prueba con el sitio real stacker.news se hace en el computador del postulante: el entorno del agente no tenía
+   acceso abierto a internet (solo a registros de paquetes y GitHub), así que no podía conectarse a los relays ni a SN.
+7. Publicación: el agente integró el historial del repositorio, reemplazó el .zip subido inicialmente por el código
+   fuente y lo publicó en GitHub.
